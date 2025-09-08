@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../src/db/pool");
+const sequelize = require("../src/db/database");
 
 const Cart = sequelize.define("Cart", {
   id: {
@@ -10,4 +10,4 @@ const Cart = sequelize.define("Cart", {
   },
 });
 
-module.exports = { Cart }
+module.exports = { Cart };

@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-const sequelize = require("../src/db/pool");
+const sequelize = require("../src/db/database");
 
 // ! sequelize.sync() in app.js will automatically pluralise the table name ('Product' --> 'Products')
 const Product = sequelize.define("Product", {

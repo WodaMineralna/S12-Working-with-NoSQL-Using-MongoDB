@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../src/db/pool");
+const sequelize = require("../src/db/database");
 
 // ! User authentication will be implemented in the future
 

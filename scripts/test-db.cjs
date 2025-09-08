@@ -1,5 +1,6 @@
 require("dotenv").config();
-const sequelize = require("../src/db/pool");
+// const sequelize = require("../src/db/database");
+const sequelize = require("../src/db/database");
 const {
   ensureSchema,
   ensureUserAndCart,
