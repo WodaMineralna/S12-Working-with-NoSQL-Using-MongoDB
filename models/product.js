@@ -7,7 +7,9 @@ const { getDb } = require("../src/db/database");
 
 class Product {
   constructor(id, title, price, description, imageUrl) {
-    this._id = new mongodb.ObjectId(`${id}`);
+    if (id && mongodb.ObjectId.isValid(id)) {
+      this._id = new mongodb.ObjectId(`${id}`);
+    }
     this.title = title;
     this.price = price;
     this.description = description;
