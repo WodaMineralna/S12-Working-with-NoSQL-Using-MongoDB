@@ -60,10 +60,25 @@ class Product {
         .collection("products")
         .find({ _id: new mongodb.ObjectId(`${id}`) })
         .next();
-      console.log("Found product:", product);
+      console.log("Found product:", product); // DEBUGGING
       return product;
     } catch (err) {
       const error = new Error("Failed to fetch product with ID:", id);
+      error.details = err;
+      throw error;
+    }
+  }
+
+  static async deleteProduct(id) {
+    try {
+      const db = getDb();
+      const result = await db
+        .collection("products")
+        .deleteOne({ _id: new mongodb.ObjectId(`${id}`) });
+      console.log("Deleted product:", result); // DEBUGGING
+      return result;
+    } catch (err) {
+      const error = new Error("Failed to delete product with ID:", id);
       error.details = err;
       throw error;
     }
@@ -167,64 +182,64 @@ class Product {
 //   }
 // }
 
-// ! function used both in creating a product, and adding a product to cart
-async function addProduct(user, productData, isCart) {
-  try {
-    if (isCart === "cart") {
-      const cart = await user.getCart();
-      const products = await cart.getProducts({
-        where: { id: productData },
-      });
+// // ! function used both in creating a product, and adding a product to cart
+// async function addProduct(user, productData, isCart) {
+//   try {
+//     if (isCart === "cart") {
+//       const cart = await user.getCart();
+//       const products = await cart.getProducts({
+//         where: { id: productData },
+//       });
 
-      let product;
-      let quantity;
+//       let product;
+//       let quantity;
 
-      // if product already exists in the cart, increase quantity
-      if (products.length > 0) {
-        product = products[0];
-        quantity = product.CartItem.quantity || 0;
-        await product.CartItem.update({ quantity: quantity + 1 });
-        return;
-      }
+//       // if product already exists in the cart, increase quantity
+//       if (products.length > 0) {
+//         product = products[0];
+//         quantity = product.CartItem.quantity || 0;
+//         await product.CartItem.update({ quantity: quantity + 1 });
+//         return;
+//       }
 
-      product = await Product.findByPk(productData);
-      if (!product) throw new Error("Product not found");
+//       product = await Product.findByPk(productData);
+//       if (!product) throw new Error("Product not found");
 
-      await cart.addProduct(product, { through: { quantity: 1 } });
-      return;
-    }
+//       await cart.addProduct(product, { through: { quantity: 1 } });
+//       return;
+//     }
 
-    const addedProduct = await user.createProduct({ ...productData });
-    console.log(`Added product data: ${addedProduct}`); // DEBUGGING
-    return addedProduct.id;
-  } catch (error) {
-    throw new Error(
-      `An error occured while adding a new product! --- ${error}`
-    );
-  }
-}
+//     const addedProduct = await user.createProduct({ ...productData });
+//     console.log(`Added product data: ${addedProduct}`); // DEBUGGING
+//     return addedProduct.id;
+//   } catch (error) {
+//     throw new Error(
+//       `An error occured while adding a new product! --- ${error}`
+//     );
+//   }
+// }
 
-async function deleteProduct(id, user, isCart) {
-  try {
-    if (isCart === "cart") {
-      const cart = await user.getCart();
-      await cart.removeProduct(id);
-      return;
-    }
+// async function deleteProduct(id, user, isCart) {
+//   try {
+//     if (isCart === "cart") {
+//       const cart = await user.getCart();
+//       await cart.removeProduct(id);
+//       return;
+//     }
 
-    const product = await Product.findByPk(id);
-    if (!product) {
-      throw new Error(`No product found with ID: ${id}`);
-    }
+//     const product = await Product.findByPk(id);
+//     if (!product) {
+//       throw new Error(`No product found with ID: ${id}`);
+//     }
 
-    await product.destroy();
-    // console.log(`Updated product with ID: ${id} ---`, result); // DEBUGGING
-  } catch (error) {
-    throw new Error(
-      `An error occurred while deleting (ID: ${id}) product! --- ${error}`
-    );
-  }
-}
+//     await product.destroy();
+//     // console.log(`Updated product with ID: ${id} ---`, result); // DEBUGGING
+//   } catch (error) {
+//     throw new Error(
+//       `An error occurred while deleting (ID: ${id}) product! --- ${error}`
+//     );
+//   }
+// }
 
 async function addOrder(user) {
   try {
@@ -253,7 +268,7 @@ module.exports = {
   // fetchAll,
   // findProductById,
   // updateProduct,
-  addProduct,
-  deleteProduct,
+  // addProduct,
+  // deleteProduct,
   addOrder,
 };

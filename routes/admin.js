@@ -6,8 +6,6 @@ const router = express.Router();
 
 const catchErrAsync = require("../utils/catchErrAsync");
 
-// * will be uncommented in the future
-
 // /admin/add-product => GET
 router.get("/add-product", catchErrAsync(adminController.getAddProduct));
 
@@ -24,6 +22,9 @@ router.get(
 
 router.post("/edit-product", catchErrAsync(adminController.postEditProduct));
 
-// router.post("/delete/:productId", catchErrAsync(adminController.postDeleteProduct))
+router.post(
+  "/delete/:productId",
+  catchErrAsync(adminController.postDeleteProduct)
+);
 
 module.exports = router;

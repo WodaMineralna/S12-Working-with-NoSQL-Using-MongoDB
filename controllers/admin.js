@@ -4,7 +4,7 @@ const {
   // findProductById,
   // updateProduct,
   // addProduct,
-  deleteProduct,
+  // deleteProduct,
 } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
@@ -60,6 +60,6 @@ exports.postAddProduct = async (req, res, next) => {
 
 exports.postDeleteProduct = async (req, res, next) => {
   const id = req.body.productId;
-  await deleteProduct(id);
+  await Product.deleteProduct(id);
   res.redirect("/admin/products");
 };
