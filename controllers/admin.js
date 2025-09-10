@@ -1,8 +1,8 @@
 const {
   Product,
   // fetchAll,
-  findProductById,
-  updateProduct,
+  // findProductById,
+  // updateProduct,
   // addProduct,
   deleteProduct,
 } = require("../models/product");
@@ -18,28 +18,26 @@ exports.getProductsPage = async (req, res, next) => {
 
 exports.getEditProduct = async (req, res, next) => {
   const editMode = req.query.edit;
-  if (!editMode) {
-    return res.redirect("/");
-  }
+  if (!editMode) return res.redirect("/");
 
   const id = req.params.productId;
-  const product = await findProductById(id, req.user);
+  const product = await Product.findProductById(id);
 
   res.render("admin/edit-product", {
+    product,
     pageTitle: "Edit Product",
     path: "/admin/edit-product",
     editing: editMode,
-    product,
   });
 };
 
 exports.postEditProduct = async (req, res, next) => {
   const id = req.body.productId;
-  const { title, imageUrl, description, price } = req.body;
-  const product = { id, title, imageUrl, description, price };
+  const { title, description, imageUrl, price } = req.body;
+  const product = new Product(id, title, price, description, imageUrl);
 
-  console.log("controllers/admin.js | Edited productId: ", id);
-  await updateProduct(product);
+  console.log("controllers/admin.js | Edited productId: ", id); // DEBUGGING
+  await product.save();
   res.redirect("/");
 };
 

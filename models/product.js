@@ -6,7 +6,8 @@ const mongodb = require("mongodb");
 const { getDb } = require("../src/db/database");
 
 class Product {
-  constructor(title, price, description, imageUrl) {
+  constructor(id, title, price, description, imageUrl) {
+    this._id = new mongodb.ObjectId(`${id}`);
     this.title = title;
     this.price = price;
     this.description = description;
@@ -14,10 +15,22 @@ class Product {
   }
 
   async save() {
+    const db = getDb();
     try {
-      const db = getDb();
-      const result = await db.collection("products").insertOne(this);
-      console.log("DB collection 'products' .insertOne() result:", result);
+      let result;
+
+      // ^ if this._id field exists, it means a product was meant to be updated
+      if (this._id) {
+        const { _id, ...fieldsToUpdate } = this;
+        result = await db.collection("products").updateOne(
+          { _id: this._id },
+          {
+            $set: fieldsToUpdate,
+          }
+        );
+      } else result = await db.collection("products").insertOne(this);
+
+      console.log("DB collection 'products' .save() result:", result);
       return result;
     } catch (err) {
       const error = new Error("Failed to save product");
@@ -31,7 +44,7 @@ class Product {
       const db = getDb();
       // ^ pagination is currently unnecessary, app won't be handling thousands of products at once (because there aren't so many)
       const products = await db.collection("products").find().toArray();
-      console.log(products);
+      // console.log(products); // DEBUGGING
       return products;
     } catch (err) {
       const error = new Error("Failed to fetch products");
@@ -135,24 +148,24 @@ class Product {
 //   }
 // }
 
-async function updateProduct(productUpdateData) {
-  try {
-    const productId = productUpdateData.id;
-    const product = await Product.findByPk(productId);
+// async function updateProduct(productUpdateData) {
+//   try {
+//     const productId = productUpdateData.id;
+//     const product = await Product.findByPk(productId);
 
-    if (!product) {
-      throw new Error(`No product found with ID: ${productId}`);
-    }
+//     if (!product) {
+//       throw new Error(`No product found with ID: ${productId}`);
+//     }
 
-    await product.update(productUpdateData);
-    // const result = await product.update(productUpdateData); // DEBUGGING
-    // console.log(`Updated product with ID: ${productId} ---`, result); // DEBUGGING
-  } catch (error) {
-    throw new Error(
-      `An error occurred while updating product data! --- ${error}`
-    );
-  }
-}
+//     await product.update(productUpdateData);
+//     // const result = await product.update(productUpdateData); // DEBUGGING
+//     // console.log(`Updated product with ID: ${productId} ---`, result); // DEBUGGING
+//   } catch (error) {
+//     throw new Error(
+//       `An error occurred while updating product data! --- ${error}`
+//     );
+//   }
+// }
 
 // ! function used both in creating a product, and adding a product to cart
 async function addProduct(user, productData, isCart) {
@@ -239,7 +252,7 @@ module.exports = {
   Product,
   // fetchAll,
   // findProductById,
-  updateProduct,
+  // updateProduct,
   addProduct,
   deleteProduct,
   addOrder,
