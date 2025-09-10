@@ -1,14 +1,14 @@
 const {
-  fetchAll,
+  Product,
+  // fetchAll,
   findProductById,
   updateProduct,
-  addProduct,
+  // addProduct,
   deleteProduct,
-  Product,
 } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
-  const products = await fetchAll(req.user);
+  const products = await Product.fetchAll();
   res.render("admin/products", {
     products,
     pageTitle: "Admin Products",

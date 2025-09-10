@@ -19,9 +19,8 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-// * will be uncommented in the future
 const adminRoutes = require("./routes/admin");
-// const shopRoutes = require("./routes/shop");
+const shopRoutes = require("./routes/shop");
 
 const catchErrAsync = require("./utils/catchErrAsync");
 
@@ -42,9 +41,8 @@ app.use(express.static(path.join(__dirname, "public")));
 //   })
 // );
 
-// * will be uncommented in the future
 app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use(errorController.get404);
 app.use(errorController.getErrorPage);

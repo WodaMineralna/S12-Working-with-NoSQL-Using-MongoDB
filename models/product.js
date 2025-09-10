@@ -2,6 +2,7 @@
 
 // const sequelize = require("../src/db/database");
 
+const mongodb = require("mongodb");
 const { getDb } = require("../src/db/database");
 
 class Product {
@@ -18,8 +19,40 @@ class Product {
       const result = await db.collection("products").insertOne(this);
       console.log("DB collection 'products' .insertOne() result:", result);
       return result;
-    } catch (error) {
-      throw new Error("Error while connecting to the database!");
+    } catch (err) {
+      const error = new Error("Failed to save product");
+      error.details = err;
+      throw error;
+    }
+  }
+
+  static async fetchAll() {
+    try {
+      const db = getDb();
+      // ^ pagination is currently unnecessary, app won't be handling thousands of products at once (because there aren't so many)
+      const products = await db.collection("products").find().toArray();
+      console.log(products);
+      return products;
+    } catch (err) {
+      const error = new Error("Failed to fetch products");
+      error.details = err;
+      throw error;
+    }
+  }
+
+  static async findProductById(id) {
+    try {
+      const db = getDb();
+      const product = await db
+        .collection("products")
+        .find({ _id: new mongodb.ObjectId(`${id}`) })
+        .next();
+      console.log("Found product:", product);
+      return product;
+    } catch (err) {
+      const error = new Error("Failed to fetch product with ID:", id);
+      error.details = err;
+      throw error;
     }
   }
 }
@@ -50,57 +83,57 @@ class Product {
 //   },
 // });
 
-async function fetchAll(user, table) {
-  try {
-    let products;
+// async function fetchAll(user, table) {
+//   try {
+//     let products;
 
-    if (user && table === "cart") {
-      const cart = await user.getCart();
-      products = await cart.getProducts();
-      // console.log("Fetched cart items:", products); // DEBUGGING
-      return products;
-    }
-    if (user && table === "orders") {
-      const orders = await user.getOrders({ include: ["Products"] });
-      return orders;
-    }
+//     if (user && table === "cart") {
+//       const cart = await user.getCart();
+//       products = await cart.getProducts();
+//       // console.log("Fetched cart items:", products); // DEBUGGING
+//       return products;
+//     }
+//     if (user && table === "orders") {
+//       const orders = await user.getOrders({ include: ["Products"] });
+//       return orders;
+//     }
 
-    if (user) {
-      products = await user.getProducts({ raw: true });
-    } else {
-      products = await Product.findAll({ raw: true });
-    }
-    return products;
-  } catch (error) {
-    throw new Error(`An error occurred while fetching db data! --- ${error}`);
-  }
-}
+//     if (user) {
+//       products = await user.getProducts({ raw: true });
+//     } else {
+//       products = await Product.findAll({ raw: true });
+//     }
+//     return products;
+//   } catch (error) {
+//     throw new Error(`An error occurred while fetching db data! --- ${error}`);
+//   }
+// }
 
-async function findProductById(id, user) {
-  try {
-    let product;
+// async function findProductById(id, user) {
+//   try {
+//     let product;
 
-    if (!user) {
-      product = await Product.findByPk(id);
-      return product;
-    } else {
-      product = await user.getProducts({ where: { id } }); // ^ yields an empty array, when no product was found
-    }
+//     if (!user) {
+//       product = await Product.findByPk(id);
+//       return product;
+//     } else {
+//       product = await user.getProducts({ where: { id } }); // ^ yields an empty array, when no product was found
+//     }
 
-    if (!product || product.length === 0) {
-      // ^ so product.length === 0 must be also checked here
-      throw new Error(`No product found with ID: ${id}`);
-    }
-    // console.log(`Found product with ID: ${id} ---`, product); // DEBUGGING
-    const singleProduct = product[0];
-    const productObj = singleProduct?.get({ plain: true });
-    return productObj;
-  } catch (error) {
-    throw new Error(
-      `An error occurred while fetching ID: (${id}) item data! --- ${error}`
-    );
-  }
-}
+//     if (!product || product.length === 0) {
+//       // ^ so product.length === 0 must be also checked here
+//       throw new Error(`No product found with ID: ${id}`);
+//     }
+//     // console.log(`Found product with ID: ${id} ---`, product); // DEBUGGING
+//     const singleProduct = product[0];
+//     const productObj = singleProduct?.get({ plain: true });
+//     return productObj;
+//   } catch (error) {
+//     throw new Error(
+//       `An error occurred while fetching ID: (${id}) item data! --- ${error}`
+//     );
+//   }
+// }
 
 async function updateProduct(productUpdateData) {
   try {
@@ -204,8 +237,8 @@ async function addOrder(user) {
 
 module.exports = {
   Product,
-  fetchAll,
-  findProductById,
+  // fetchAll,
+  // findProductById,
   updateProduct,
   addProduct,
   deleteProduct,

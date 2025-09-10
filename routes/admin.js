@@ -13,7 +13,7 @@ const catchErrAsync = require("../utils/catchErrAsync");
 router.get("/add-product", catchErrAsync(adminController.getAddProduct));
 
 // /admin/products => GET
-// router.get("/products", catchErrAsync(adminController.getProductsPage));
+router.get("/products", catchErrAsync(adminController.getProductsPage));
 
 // /admin/add-product => POST
 router.post("/add-product", catchErrAsync(adminController.postAddProduct));
