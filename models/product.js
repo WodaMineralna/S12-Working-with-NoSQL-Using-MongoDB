@@ -1,32 +1,54 @@
-const { DataTypes } = require("sequelize");
+// const { DataTypes } = require("sequelize");
 
-const sequelize = require("../src/db/database");
+// const sequelize = require("../src/db/database");
 
-// ! sequelize.sync() in app.js will automatically pluralise the table name ('Product' --> 'Products')
-const Product = sequelize.define("Product", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  price: {
-    type: DataTypes.DOUBLE,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  imageUrl: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+const { getDb } = require("../src/db/database");
+
+class Product {
+  constructor(title, price, description, imageUrl) {
+    this.title = title;
+    this.price = price;
+    this.description = description;
+    this.imageUrl = imageUrl;
+  }
+
+  async save() {
+    try {
+      const db = getDb();
+      const result = await db.collection("products").insertOne(this);
+      console.log("DB collection 'products' .insertOne() result:", result);
+      return result;
+    } catch (error) {
+      throw new Error("Error while connecting to the database!");
+    }
+  }
+}
+
+// // ! sequelize.sync() in app.js will automatically pluralise the table name ('Product' --> 'Products')
+// const Product = sequelize.define("Product", {
+//   id: {
+//     type: DataTypes.INTEGER,
+//     autoIncrement: true,
+//     allowNull: false,
+//     primaryKey: true,
+//   },
+//   title: {
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   },
+//   price: {
+//     type: DataTypes.DOUBLE,
+//     allowNull: false,
+//   },
+//   description: {
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   },
+//   imageUrl: {
+//     type: DataTypes.STRING,
+//     allowNull: false,
+//   },
+// });
 
 async function fetchAll(user, table) {
   try {

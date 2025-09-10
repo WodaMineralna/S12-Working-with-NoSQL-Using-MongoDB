@@ -4,6 +4,7 @@ const {
   updateProduct,
   addProduct,
   deleteProduct,
+  Product,
 } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
@@ -52,9 +53,11 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = async (req, res, next) => {
   const { title, imageUrl, description, price } = req.body;
-  const product = { title, imageUrl, description, price };
-  const addedProductId = await addProduct(req.user, product);
-  res.redirect(`/products/${addedProductId}`);
+  const product = new Product(title, price, description, imageUrl);
+  await product.save();
+  // const addedProductId = await addProduct(req.user, product);
+  // res.redirect(`/products/${addedProductId}`);
+  res.redirect(`/products`);
 };
 
 exports.postDeleteProduct = async (req, res, next) => {

@@ -8,14 +8,18 @@ function required(name) {
   return v;
 }
 
+let _db;
+
+// * connecting to the 'shop' database
 async function mongoConnect(callback) {
   try {
     const client = await MongoClient.connect(
       `mongodb+srv://${required("MONGO_USER")}:${required(
         "MONGO_PASSWORD"
-      )}@nodejs-course-s12.dktw6kd.mongodb.net/?retryWrites=true&w=majority&appName=NodeJS-Course-S12`
+      )}@nodejs-course-s12.dktw6kd.mongodb.net/shop?retryWrites=true&w=majority&appName=NodeJS-Course-S12`
     );
-    return callback(client);
+    _db = client.db();
+    return callback();
   } catch (error) {
     throw new Error(
       "An error occured whilst trying to connect to Mongo Datase:",
@@ -24,7 +28,13 @@ async function mongoConnect(callback) {
   }
 }
 
-module.exports = mongoConnect;
+const getDb = () => {
+  if (_db) {
+    return _db;
+  } else throw new Error("No database found!");
+};
+
+module.exports = { mongoConnect, getDb };
 
 // const { Sequelize } = require("sequelize");
 
