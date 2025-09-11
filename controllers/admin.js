@@ -1,11 +1,4 @@
-const {
-  Product,
-  // fetchAll,
-  // findProductById,
-  // updateProduct,
-  // addProduct,
-  // deleteProduct,
-} = require("../models/product");
+const { Product } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
   const products = await Product.fetchAll(req.user._id);
@@ -51,11 +44,16 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = async (req, res, next) => {
   const { title, imageUrl, description, price } = req.body;
-  const product = new Product(null, title, price, description, imageUrl, req.user._id);
+  const product = new Product(
+    null,
+    title,
+    price,
+    description,
+    imageUrl,
+    req.user._id
+  );
   console.log(product);
   await product.save();
-  // const addedProductId = await addProduct(req.user, product);
-  // res.redirect(`/products/${addedProductId}`);
   res.redirect(`/products`);
 };
 

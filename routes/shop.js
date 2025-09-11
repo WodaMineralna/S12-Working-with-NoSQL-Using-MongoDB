@@ -4,7 +4,7 @@ const shopController = require("../controllers/shop");
 
 const router = express.Router();
 
-const catchErrAsync = require("../utils/catchErrAsync")
+const catchErrAsync = require("../utils/catchErrAsync");
 
 router.get("/", catchErrAsync(shopController.getIndex));
 

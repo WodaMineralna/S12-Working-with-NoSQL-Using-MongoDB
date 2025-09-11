@@ -35,18 +35,3 @@ const getDb = () => {
 };
 
 module.exports = { mongoConnect, getDb };
-
-// const { Sequelize } = require("sequelize");
-
-// const sequelize = new Sequelize(
-//   required("DB_NAME"),
-//   required("DB_USER"),
-//   required("DB_PASSWORD"),
-//   {
-//     dialect: "mysql",
-//     host: required("DB_HOST"),
-//     port: Number(required("DB_PORT")),
-//   }
-// );
-
-// module.exports = sequelize;

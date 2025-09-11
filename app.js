@@ -2,12 +2,6 @@ const path = require("path");
 const express = require("express");
 require("dotenv").config();
 
-// const {
-//   ensureSchema,
-//   ensureUserAndCart,
-//   ensureSeedProducts,
-// } = require("./src/db/bootstrap");
-
 const { User } = require("./models/user");
 
 const errorController = require("./controllers/error");
@@ -37,7 +31,7 @@ app.use(
     if (!user) {
       throw new Error(`Could not find user!`);
     }
-    
+
     req.user = new User(user._id, user.name, user.email, user.cart);
     next();
   })
@@ -53,21 +47,3 @@ app.use(errorController.getErrorPage);
 mongoConnect(() => {
   app.listen(3000);
 });
-
-// // ! IIFE
-// // * creates tables for all Sequelize Models and defines their associations, creates User and Cart if doesn't exist
-// (async () => {
-//   try {
-//     await ensureSchema();
-//     await ensureUserAndCart(USER_ID);
-
-//     if (process.env.SEED_PRODUCTS === "true") {
-//       await ensureSeedProducts({ ownerUserId: USER_ID });
-//     }
-//   } catch (error) {
-//     console.log("Startup failed:", error);
-//     process.exit(1);
-//   }
-// })();
-
-// app.listen(3000);

@@ -1,13 +1,4 @@
-const {
-  Product,
-  // fetchAll,
-  // findProductById,
-  addProduct,
-  deleteProduct,
-  addOrder,
-} = require("../models/product");
-
-const { User } = require("../models/user");
+const { Product, deleteProduct, addOrder } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
   const products = await Product.fetchAll();

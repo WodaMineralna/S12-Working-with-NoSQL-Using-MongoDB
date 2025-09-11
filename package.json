@@ -8,9 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-server": "node app.js",
-    "db:up": "docker compose up -d",
-    "db:down": "docker compose down",
-    "db:reset": "docker compose down -v && docker compose up -d",
     "test:db": "node scripts/test-db.cjs"
   },
   "author": "Maximilian Schwarzmüller",
