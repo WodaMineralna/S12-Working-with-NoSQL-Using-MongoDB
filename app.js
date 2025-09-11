@@ -8,7 +8,7 @@ require("dotenv").config();
 //   ensureSeedProducts,
 // } = require("./src/db/bootstrap");
 
-// const { User } = require("./models/user");
+const { User } = require("./models/user");
 
 const errorController = require("./controllers/error");
 
@@ -27,19 +27,20 @@ const catchErrAsync = require("./utils/catchErrAsync");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// // dummy User selector
-// const USER_ID = Number(process.env.USER_ID) || 1;
+// dummy User selector
+const USER_ID = "68c31b5b641635d03c40d60c";
 
-// app.use(
-//   catchErrAsync(async (req, res, next) => {
-//     const user = await User.findByPk(USER_ID); // ! user authentication will be implemented in the future
-//     if (!user) {
-//       throw new Error(`No user found!`);
-//     }
-//     req.user = user;
-//     next();
-//   })
-// );
+// ! user authentication will be implemented in the future
+app.use(
+  catchErrAsync(async (req, res, next) => {
+    const user = await User.findUserById(USER_ID);
+    if (!user) {
+      throw new Error(`Could not find user!`);
+    }
+    req.user = user;
+    next();
+  })
+);
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

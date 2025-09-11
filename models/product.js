@@ -32,7 +32,7 @@ class Product {
         );
       } else result = await db.collection("products").insertOne(this);
 
-      console.log("DB collection 'products' .save() result:", result);
+      console.log("DB collection 'products' .save() result:", result); // DEBUGGING
       return result;
     } catch (err) {
       const error = new Error("Failed to save product");
