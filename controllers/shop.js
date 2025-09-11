@@ -7,6 +7,8 @@ const {
   addOrder,
 } = require("../models/product");
 
+const { User } = require("../models/user");
+
 exports.getProductsPage = async (req, res, next) => {
   const products = await Product.fetchAll();
   res.render("shop/product-list", {
@@ -48,8 +50,8 @@ exports.getCart = async (req, res, next) => {
 
 exports.postCart = async (req, res, next) => {
   const id = req.body.productId;
-
-  await addProduct(req.user, id, "cart");
+  const product = await Product.findProductById(id);
+  await req.user.addToCart(product);
 
   res.redirect("/cart");
 };

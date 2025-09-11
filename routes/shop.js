@@ -16,7 +16,7 @@ router.get("/products/:id", catchErrAsync(shopController.getProduct));
 
 // router.get("/cart", catchErrAsync(shopController.getCart));
 
-// router.post("/cart", catchErrAsync(shopController.postCart));
+router.post("/cart", catchErrAsync(shopController.postCart));
 
 // router.post("/cart/delete/:productId", catchErrAsync(shopController.postDeleteCart))
 

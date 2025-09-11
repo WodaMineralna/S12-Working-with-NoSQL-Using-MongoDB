@@ -37,7 +37,8 @@ app.use(
     if (!user) {
       throw new Error(`Could not find user!`);
     }
-    req.user = user;
+    
+    req.user = new User(user._id, user.name, user.email, user.cart);
     next();
   })
 );

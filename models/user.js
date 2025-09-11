@@ -1,14 +1,15 @@
 // const { DataTypes } = require("sequelize");
 // const sequelize = require("../src/db/database");
 
-const mongodb = require("mongodb");
 const { getDb } = require("../src/db/database");
 
 // ! User authentication will be implemented in the future
 class User {
-  constructor(username, email) {
+  constructor(id, username, email, cart) {
+    this._id = id;
     this.name = username;
     this.email = email;
+    this.cart = cart; // { items: [{cartItem}, {cartItem}] }
   }
 
   async save() {
@@ -19,6 +20,44 @@ class User {
       return result;
     } catch (err) {
       const error = new Error("Failed to save user");
+      error.details = err;
+      throw error;
+    }
+  }
+
+  async addToCart(product) {
+    try {
+      // console.log("Added Product:", product); // DEBUGGING
+
+      // ! conversion to string is needed, comparing two 'ObjectId' objects won't work
+      const existingProductIndex = this.cart.items.findIndex((prod) => {
+        return prod._id.toString() === product._id.toString();
+      });
+      // console.log("Existing prod index:", existingProductIndex); // DEBUGGING
+
+      let updatedCart;
+
+      // ^ if cart product already exists, increase quantity
+      if (existingProductIndex !== -1) {
+        updatedCart = { items: [...this.cart.items] };
+        updatedCart.items[existingProductIndex].quantity += 1;
+      } else {
+        updatedCart = {
+          items: [...this.cart.items, { ...product, quantity: 1 }],
+        };
+      }
+
+      // console.log("Updated Cart:", updatedCart); // DEBUGGING
+
+      const db = getDb();
+      const result = await db
+        .collection("users")
+        .updateOne({ _id: this._id }, { $set: { cart: updatedCart } });
+
+      // console.log("Result of adding to Cart:", result); // DEBUGGING
+      return result;
+    } catch (err) {
+      const error = new Error("Failed to add item to cart");
       error.details = err;
       throw error;
     }
