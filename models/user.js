@@ -22,6 +22,19 @@ class User {
     }
   }
 
+  getCart() {
+    try {
+      const cartItems = this.cart.items;
+      console.log("Cart items:", cartItems); // DEBUGGING
+
+      return cartItems;
+    } catch (err) {
+      const error = new Error("Failed to get cart data");
+      error.details = err;
+      throw error;
+    }
+  }
+
   async addToCart(product) {
     try {
       // console.log("Added Product:", product); // DEBUGGING

@@ -30,7 +30,7 @@ exports.getIndex = async (req, res, next) => {
 };
 
 exports.getCart = async (req, res, next) => {
-  const cartItems = await fetchAll(req.user, "cart");
+  const cartItems = req.user.getCart();
 
   res.render("shop/cart", {
     products: cartItems,

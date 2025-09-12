@@ -14,7 +14,7 @@ router.get("/products", catchErrAsync(shopController.getProductsPage));
 
 router.get("/products/:id", catchErrAsync(shopController.getProduct));
 
-// router.get("/cart", catchErrAsync(shopController.getCart));
+router.get("/cart", catchErrAsync(shopController.getCart));
 
 router.post("/cart", catchErrAsync(shopController.postCart));
 
