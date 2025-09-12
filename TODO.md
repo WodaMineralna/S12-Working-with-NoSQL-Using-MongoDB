@@ -6,6 +6,7 @@ Each item will be checked off as it’s implemented.
 ---
 
 ## High Priority
+[ ] Add checkout validation / snapshot for cart items (check if product data changed and if product data in cart.items array is outdated)
 [ ] Update README
 [ ] Update / remove test-db.cjs
 
