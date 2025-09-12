@@ -35,6 +35,24 @@ class User {
     }
   }
 
+  async deleteItemFromCart(productId) {
+    try {
+      const updatedCartItems = this.cart.items.filter((cartItem) => {
+        return cartItem._id.toString() !== productId.toString();
+      });
+      console.log("Updated cart items:", updatedCartItem); // DEBUGGING
+
+      const db = getDb()
+      const result = await db.collection("users").updateOne({ _id: new Object(`${this._id}`) }, { $set: { cart: { items: updatedCartItems } } })
+
+      return result
+    } catch (err) {
+      const error = new Error("Failed to get cart data");
+      error.details = err;
+      throw error;
+    }
+  }
+
   async addToCart(product) {
     try {
       // console.log("Added Product:", product); // DEBUGGING
