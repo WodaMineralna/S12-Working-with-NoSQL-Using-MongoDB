@@ -27,7 +27,7 @@ class User {
   getCart() {
     try {
       const cartItems = this.cart.items;
-      console.log("Cart items:", cartItems); // DEBUGGING
+      // console.log("Cart items:", cartItems); // DEBUGGING
 
       return cartItems;
     } catch (err) {
@@ -42,7 +42,7 @@ class User {
       const updatedCartItems = this.cart.items.filter((cartItem) => {
         return cartItem._id.toString() !== productId.toString();
       });
-      console.log("Updated cart items:", updatedCartItems); // DEBUGGING
+      // console.log("Updated cart items:", updatedCartItems); // DEBUGGING
 
       const db = getDb();
       const result = await db
@@ -98,11 +98,63 @@ class User {
     }
   }
 
+  // ! bonus validation / snapshot for cart items is required and will be implemented in the futue
+  // * if user adds a product to cart, and then the product data gets modified, the change wont be reflected both in addToCart and in addOrder    -    which is a problem!
+
+  async addOrder() {
+    try {
+      const db = getDb();
+      const order = {
+        user: {
+          _id: new ObjectId(`${this._id}`),
+          name: this.name,
+          email: this.email,
+        },
+        items: this.cart.items,
+      };
+      const result = await db.collection("orders").insertOne(order);
+      console.log("Result of adding an order:", result); // DEBUGGING
+
+      if (!result) new Error("Failed to add an order");
+
+      // delete all cart items
+      this.cart = { items: [] };
+      return await db
+        .collection("users")
+        .updateOne(
+          { _id: new ObjectId(`${this._id}`) },
+          { $set: { cart: { items: [] } } }
+        );
+    } catch (err) {
+      const error = new Error("Failed to add an order");
+      error.details = err;
+      throw error;
+    }
+  }
+
+  async getOrders() {
+    try {
+      const db = getDb();
+      const orders = await db
+        .collection("orders")
+        .find({ "user._id": new ObjectId(`${this._id}`) })
+        .toArray();
+
+      console.log("Result of getting orders:", orders); // DEBUGGING
+
+      return orders;
+    } catch (err) {
+      const error = new Error("Failed to add an order");
+      error.details = err;
+      throw error;
+    }
+  }
+
   static async findUserById(id) {
     try {
       const db = getDb();
       const user = await db.collection("users").findOne({ _id: id });
-      console.log("Found user:", user); // DEBUGGING
+      // console.log("Found user:", user); // DEBUGGING
       return user;
     } catch (err) {
       const error = new Error("Failed to save product");

@@ -55,7 +55,7 @@ exports.postDeleteCart = async (req, res, next) => {
 };
 
 exports.getOrders = async (req, res, next) => {
-  const orders = await fetchAll(req.user, "orders");
+  const orders = await req.user.getOrders();
   res.render("shop/orders", {
     orders,
     path: "/orders",
@@ -64,7 +64,7 @@ exports.getOrders = async (req, res, next) => {
 };
 
 exports.postOrder = async (req, res, next) => {
-  await addOrder(req.user);
+  await req.user.addOrder();
 
   res.redirect("/orders");
 };
