@@ -1,5 +1,7 @@
 const { getDb } = require("../src/db/database");
 
+const ObjectId = require("mongodb").ObjectId;
+
 // ! User authentication will be implemented in the future
 class User {
   constructor(id, username, email, cart) {
@@ -40,14 +42,19 @@ class User {
       const updatedCartItems = this.cart.items.filter((cartItem) => {
         return cartItem._id.toString() !== productId.toString();
       });
-      console.log("Updated cart items:", updatedCartItem); // DEBUGGING
+      console.log("Updated cart items:", updatedCartItems); // DEBUGGING
 
-      const db = getDb()
-      const result = await db.collection("users").updateOne({ _id: new Object(`${this._id}`) }, { $set: { cart: { items: updatedCartItems } } })
+      const db = getDb();
+      const result = await db
+        .collection("users")
+        .updateOne(
+          { _id: new ObjectId(`${this._id}`) },
+          { $set: { cart: { items: updatedCartItems } } }
+        );
 
-      return result
+      return result;
     } catch (err) {
-      const error = new Error("Failed to get cart data");
+      const error = new Error("Failed to delete product from cart");
       error.details = err;
       throw error;
     }
@@ -95,7 +102,7 @@ class User {
     try {
       const db = getDb();
       const user = await db.collection("users").findOne({ _id: id });
-      console.log("Found user:", user);
+      console.log("Found user:", user); // DEBUGGING
       return user;
     } catch (err) {
       const error = new Error("Failed to save product");
