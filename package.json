@@ -7,6 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
+    "db:start": "docker compose up -d",
+    "db:down": "docker compose down -v",
+    "db:reset": "docker compose down -v && docker compose up -d",
     "start-server": "node app.js",
     "test:db": "node scripts/test-db.cjs"
   },
