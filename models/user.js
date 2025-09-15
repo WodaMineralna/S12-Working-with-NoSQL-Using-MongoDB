@@ -157,7 +157,7 @@ class User {
       // console.log("Found user:", user); // DEBUGGING
       return user;
     } catch (err) {
-      const error = new Error("Failed to save product");
+      const error = new Error("Failed to find user by ID:", id);
       error.details = err;
       throw error;
     }
