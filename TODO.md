@@ -9,7 +9,7 @@ Each item will be checked off as it’s implemented.
 [X] Set up docker-compose file  
 [X] Update README  
 [ ] Add checkout validation / snapshot for cart items (check if product data changed and if product data in cart.items array is outdated)  
-[ ] Update / remove test-db.cjs  
+[x] Update / remove test-db.cjs  
 
 ## Medium Priority
 [ ] Make the error page prettier  

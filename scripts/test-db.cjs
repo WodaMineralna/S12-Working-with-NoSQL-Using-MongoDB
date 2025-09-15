@@ -1,53 +1,36 @@
-// require("dotenv").config();
-// // const sequelize = require("../src/db/database");
-// const sequelize = require("../src/db/database");
-// const {
-//   ensureSchema,
-//   ensureUserAndCart,
-//   ensureSeedProducts,
-// } = require("../src/db/bootstrap");
+const ObjectId = require("mongodb").ObjectId;
+const { mongoConnect, getDb, close } = require("../src/db/database");
 
-// const USER_ID = process.env.USER_ID;
+const { User } = require("../models/user");
+const { Product } = require("../models/product");
 
-// (async () => {
-//   try {
-//     const { Product, User, Cart } = sequelize.models;
+const USER_ID = new ObjectId(`${"68c59cebf2b7f6e17ff9ea08"}`);
 
-//     await sequelize.authenticate();
-//     await ensureSchema();
-//     await ensureUserAndCart(USER_ID);
-//     await ensureSeedProducts(USER_ID);
+(async () => {
+  try {
+    await mongoConnect();
 
-//     const productData = await Product.findAll({
-//       attributes: [
-//         "id",
-//         "title",
-//         "price",
-//         "description",
-//         "imageUrl",
-//         "createdAt",
-//       ],
-//       order: [["id", "ASC"]],
-//       raw: true,
-//     });
+    const db = getDb();
+    const rawUser = await db.collection("users").findOne({ _id: USER_ID });
+    if (!rawUser) {
+      throw new Error(`Could not find user!`);
+    }
 
-//     const userData = await User.findAll({
-//       attributes: ["name", "email", "createdAt"],
-//       order: [["id", "ASC"]],
-//       raw: true,
-//     });
+    const productData = await Product.fetchAll();
+    const userData = await db.collection("users").find().toArray();
 
-//     const cartData = await Cart.findAll({ raw: true });
+    const user = new User(rawUser._id, rawUser.name, rawUser.email, rawUser.cart);
+    const cartData = await user.getCart();
 
-//     console.log("===== DB connection OK =====");
-//     console.log("--- Product data: ---", productData);
-//     console.log("--- User data: ---", userData);
-//     console.log("--- Cart data: ---", cartData);
-//   } catch (error) {
-//     console.error("===== DB connection FAILED =====");
-//     console.error(error.message);
-//     process.exit(1);
-//   } finally {
-//     await sequelize.close();
-//   }
-// })();
+    console.log("===== DB connection OK =====");
+    console.log("--- Product data: ---", productData);
+    console.log("--- User data: ---", userData);
+    console.log("--- Cart data: ---", cartData);
+  } catch (error) {
+    console.error("===== DB connection FAILED =====");
+    console.error(error.message);
+    process.exit(1);
+  } finally {
+    await close();
+  }
+})();
