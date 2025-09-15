@@ -1,6 +1,6 @@
-# Node.js Course - S12 Working with NoSQL & Using-MongoDB
+# Node.js Course - S12 Working with NoSQL & Using MongoDB
 
-Practice code for Section 12 - Working with NoSQL & Using-MongoDB, part of the course "NodeJS - The Complete Guide (MVC, REST APIs, GraphQL, Deno)" by Maximilian Schwarzmüller.
+Practice code for Section 12 - Working with NoSQL & Using MongoDB, part of the course "NodeJS - The Complete Guide (MVC, REST APIs, GraphQL, Deno)" by Maximilian Schwarzmüller.
 
 This project covers:
 - Connecting a Node.js app to MongoDB using the official driver

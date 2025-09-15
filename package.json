@@ -23,10 +23,6 @@
     "dotenv": "^17.2.1",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "express-handlebars": "^3.0.0",
-    "mongodb": "^6.19.0",
-    "mysql2": "^3.14.3",
-    "pug": "^2.0.3",
-    "sequelize": "^6.37.7"
+    "mongodb": "^6.19.0"
   }
 }
