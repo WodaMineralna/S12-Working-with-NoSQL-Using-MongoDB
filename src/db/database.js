@@ -21,7 +21,7 @@ function buildAtlasUri() {
 async function mongoConnect(callback) {
   try {
     let uri;
-    if (process.env.USE_MONGODB_ATLAS) uri = buildAtlasUri();
+    if (process.env.USE_MONGODB_ATLAS === "true") uri = buildAtlasUri();
     else uri = process.env.MONGODB_URI;
 
     _client = new MongoClient(uri);
