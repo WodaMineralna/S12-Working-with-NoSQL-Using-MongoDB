@@ -14,7 +14,7 @@ let _client;
 function buildAtlasUri() {
   const user = required("MONGO_USER");
   const pwd = required("MONGO_PASSWORD");
-  return `mongodb+srv://${user}:${pwd}@nodejs-course-s12.dktw6kd.mongodb.net/shop?retryWrites=true&w=majority&appName=NodeJS-Course-S12`;
+  return `mongodb+srv://${user}:${pwd}@nodejs-course.tvid3w8.mongodb.net/s12-shop?retryWrites=true&w=majority&appName=NodeJS-Course`;
 }
 
 // * connecting to the 'shop' database
