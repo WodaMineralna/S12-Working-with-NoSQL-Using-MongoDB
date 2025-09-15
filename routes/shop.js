@@ -10,8 +10,6 @@ router.get("/", catchErrAsync(shopController.getIndex));
 
 router.get("/products", catchErrAsync(shopController.getProductsPage));
 
-// * will be uncommented in the future
-
 router.get("/products/:id", catchErrAsync(shopController.getProduct));
 
 router.get("/cart", catchErrAsync(shopController.getCart));
@@ -23,7 +21,5 @@ router.post("/cart/delete/:productId", catchErrAsync(shopController.postDeleteCa
 router.get("/orders", catchErrAsync(shopController.getOrders));
 
 router.post("/orders/create", catchErrAsync(shopController.postOrder))
-
-// router.get("/checkout", catchErrAsync(shopController.getCheckout));
 
 module.exports = router;

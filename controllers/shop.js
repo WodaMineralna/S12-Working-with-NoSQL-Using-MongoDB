@@ -1,4 +1,4 @@
-const { Product, deleteProduct, addOrder } = require("../models/product");
+const { Product } = require("../models/product");
 
 exports.getProductsPage = async (req, res, next) => {
   const products = await Product.fetchAll();
@@ -67,11 +67,4 @@ exports.postOrder = async (req, res, next) => {
   await req.user.addOrder();
 
   res.redirect("/orders");
-};
-
-exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-  });
 };
